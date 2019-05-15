@@ -8,6 +8,8 @@ use File::Basename;
 $FASTX::Abi::VERSION = '0.02';
 #ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
+our @valid_new_attributes = ('filename', 'trim_ends', 'wnd', 'min_qual', 'bad_bases', 'keep_abi');
+
 =pod
 
 =encoding UTF-8
@@ -58,6 +60,7 @@ When creating a new object the only B<required> argument is I<filename>.
     min_qual   => 22,
     wnd        => 16,
     bad_bases  => 2,
+    keep_abi   => 1,      # keep Bio::Trace::ABIF object in $self->{chromas} after use
   });
 
   # Raw sequence and quality:
@@ -107,9 +110,16 @@ sub new {
         trim_ends => $args->{trim_ends},  # Trim low quality ends (bool)
         min_qual  => $args->{min_qual},   # Minimum quality
         wnd       => $args->{wnd},        # Window for end trimming
-        bad_bases => $args->{bad_bases},  #
+        bad_bases => $args->{bad_bases},  # Number of low qual bases per $window_width
+        keep_abi  => $args->{keep_abi},   # Do not destroy $self->{chromas} after use
     };
 
+    #check valid inputs:
+    for my $input (sort keys $args) {
+      if ( ! grep( /^$input$/, @valid_new_attributes ) ) {
+        confess("Method new() does not accept \"$input\" attribute. Valid attributes are:\n", join(', ', @valid_new_attributes));
+      }
+    }
 
 
 
@@ -149,6 +159,9 @@ sub new {
     # GET SEQUENCE FROM AB1 FILE
     # -----------------------------------
     my $seq = _get_sequence($self);
+    if (! $self->{keep_abi}) {
+      $self->{chromas} = undef;
+    }
     return $object;
 }
 
@@ -198,9 +211,9 @@ Returns an object with trace information:
 sub get_trace_info {
   my $self   = shift;
   my $data;
-  $data->{instrument} = $self->{chromas}->official_instrument_name();
-  $data->{version}    = $self->{chromas}->abif_version();
-  $data->{avg_peak_spacing} = $self->{chromas}->avg_peak_spacing();
+  $data->{instrument} = $self->{instrument};
+  $data->{version}    = $self->{version};
+  $data->{avg_peak_spacing} = $self->{avg_peak_spacing};
 
   return $data;
 }
@@ -291,6 +304,10 @@ sub _get_sequence {
        $self->{iso_seq} = 0;
      }
 
+
+     $self->{instrument} = $self->{chromas}->official_instrument_name();
+     $self->{version}    = $self->{chromas}->abif_version();
+     $self->{avg_peak_spacing} = $self->{chromas}->avg_peak_spacing();
 
 }
 

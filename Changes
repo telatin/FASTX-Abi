@@ -1,11 +1,17 @@
 This is the changelog for FASTX::Abi. Version prior to v 0.1 are preliminary (alpha) release, not to be used in production.
 
-0.02	2019-05-15
-  * FIXED: release test (version) was pointing to wrong module
-  * Update POD
+0.03	2019-05-15
+	* *NEW* _new()_ has attribute 'keep_abi' to preserve chromas object, otherwise deleted (_get_trace_info()_ changed accordingly)
+	* _new()_ now validates input attributes and die if unexpected value is passed
+	* New unit tests
+	* *TODO* validate object attributes populated by _new()_ 
+
+0.02	2019-05-14
+	* *FIXED* release test (version) was pointing to wrong module
+	* Update POD
 	* Added unit tests
 	* Added GitHub repository
 	* Added TravisCI testing
 
-0.01	2019-05-14
+0.01	2019-05-12
 	* Initial release (alpha)
