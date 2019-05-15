@@ -1,0 +1,9 @@
+language: perl
+perl:
+  - "5.18"
+  - "5.22"
+  - "5.26"
+sudo: false
+install:
+  - "source ./setup.sh"
+script: "dzil test"
