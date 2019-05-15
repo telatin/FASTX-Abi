@@ -1,0 +1,7 @@
+This is the changelog for FASTX::Abi. Version prior to v 0.1 are preliminary (alpha) release, not to be used in production.
+
+0.02	2019-05-15
+  * Update POD
+	
+0.01	2019-05-14
+	* Initial release (alpha)
