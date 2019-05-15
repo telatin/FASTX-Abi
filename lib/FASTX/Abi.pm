@@ -6,17 +6,11 @@ use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
 $FASTX::Abi::VERSION = '0.02';
-#ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format
+#ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
 =pod
 
 =encoding UTF-8
-
-=head1 NAME
-
-B<FASTX::Abi> - Read Sanger trace file (chromatograms) in FASTQ format. For traces
-called with I<hetero> option, the ambiguities will be split into two sequences to
-allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
 =head1 SYNOPSIS
 
@@ -27,6 +21,18 @@ allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
   # Print chromatogram as FASTQ (will print two sequences if there are ambiguities)
   print $trace_fastq->get_fastq();
+
+=head1 TEST
+
+=for html <a href="https://travis-ci.org/telatin/FASTX-Abi"><img src="https://travis-ci.org/telatin/FASTX-Abi.svg?branch=master"></a>
+
+=head1 HETERO CALLING (IUPAC AMBIGUITIES)
+
+When sequencing with Sanger a mix of molecules (i.e. PCR product from heterozigous genome) containing a single-base polimorphisms,
+B<if> the I<.ab1> file is called using the I<hetero modality> the sequence stored in the file will contain ambiguous bases (i.e. using DNA IUPAC characters).
+
+This module is designed to produce NGS-compatible FASTQ, so when ambiguous bases are detected the two "alleles" will be split into two sequences
+(of course, if more SNPs are present in the same trace, the output I<cannot> be phased).
 
 =head1 METHODS
 
@@ -185,7 +191,7 @@ Returns an object with trace information:
 
   print "Instrument:            ", $info->{instrument}, "\n";
   print "Version:               ", $info->{version}, "\n";
-  print "Aberage peak distance: ", $info->{avg_peak_spacing}, "\n";
+  print "Average peak distance: ", $info->{avg_peak_spacing}, "\n";
 
 =cut
 
@@ -279,7 +285,11 @@ sub _get_sequence {
     $self->{seq1} = $seq1;
     $self->{seq2} = $seq2;
 
-    $seq1 eq $seq2 ? $self->{iso_seq} = 1 : $self->{iso_seq} = 0;
+    if ($seq1 eq $seq2) {
+       $self->{iso_seq} = 1
+     } else {
+       $self->{iso_seq} = 0;
+     }
 
 
 }

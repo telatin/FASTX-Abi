@@ -6,20 +6,26 @@ use FindBin qw($Bin);
 use lib "$Bin/../lib";
 use FASTX::Abi;
 use Data::Dumper;
-my $test = "$Bin/../data/hetero.ab1";
+my $test_het = "$Bin/../data/hetero.ab1";
+my $test_omo = "$Bin/../data/mt.ab1";
 
-$test = $ARGV[0] if (defined $ARGV[0] and -e "$ARGV[0]");
-say STDERR " - Reading: $test";
+#$test = $ARGV[0] if (defined $ARGV[0] and -e "$ARGV[0]");
 
-my $fastq_abi = FASTX::Abi->new({
-  filename  => "$test",
+
+
+my $fastq_h = FASTX::Abi->new({
+  filename  => "$test_het",
   trim_ends => 1,
 });
 
+my $fastq_o = FASTX::Abi->new({
+  filename  => "$test_omo",
+  trim_ends => 1,
+});
 
-
-say $fastq_abi->{raw_quality};
-
-say  $fastq_abi->{diff}, ' ambiguities at position: ', join(',', @{ $fastq_abi->{diff_array} });
-
-say $fastq_abi->get_fastq('seqname');
+for my $o ($fastq_h, $fastq_o) {
+  say "Name   :\t",   $o->{filename};
+  say "Iso_seq:\t",$o->{iso_seq};
+  say "Diffs  :\t",  $o->{diff};
+  say $o->get_fastq();
+}
