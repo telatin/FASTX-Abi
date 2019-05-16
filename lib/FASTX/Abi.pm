@@ -5,11 +5,28 @@ use Carp qw(confess);
 use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
-$FASTX::Abi::VERSION = '0.02';
+$FASTX::Abi::VERSION = '0.05';
 #ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
 our @valid_new_attributes = ('filename', 'trim_ends', 'wnd', 'min_qual', 'bad_bases', 'keep_abi');
+our @valid_obj_attributes = (
+  'diff',             # number of ambiguous bases
+  'diff_array',       # array of ambiguous bases position
+  'sequence_name',    # sequence name from filename
+  'instrument',       # Instrument
+  'avg_peak_spacing', # Avg Peak Spacing in chromas
+  'version',          # version chromatograms
+  'chromas',          # Bio::Trace::ABIF object
 
+  'hetero',           # ambiguity
+  'seq1',             # Sequence 1 (non ambiguous, allele1)
+  'seq2',             # Sequence 2 (non ambiguous, allele2)
+  'sequence',         # Sequence, trimmed
+  'quality',          # Quality, trimmed
+  'raw_sequence',     # Raw sequence
+  'raw_quality',      # Raw quality
+  'iso_seq'           # Sequence are equal
+);
 =pod
 
 =encoding UTF-8
@@ -30,7 +47,7 @@ our @valid_new_attributes = ('filename', 'trim_ends', 'wnd', 'min_qual', 'bad_ba
 
 =head1 HETERO CALLING (IUPAC AMBIGUITIES)
 
-When sequencing with Sanger a mix of molecules (i.e. PCR product from heterozigous genome) containing a single-base polimorphisms,
+When Sanger-sequencing a mix of molecules (i.e. PCR product from heterozigous genome) containing a single-base polimorphisms,
 B<if> the I<.ab1> file is called using the I<hetero modality> the sequence stored in the file will contain ambiguous bases (i.e. using DNA IUPAC characters).
 
 This module is designed to produce NGS-compatible FASTQ, so when ambiguous bases are detected the two "alleles" will be split into two sequences
@@ -115,13 +132,11 @@ sub new {
     };
 
     #check valid inputs:
-    for my $input (sort keys $args) {
+    for my $input (sort keys %{ $args }) {
       if ( ! grep( /^$input$/, @valid_new_attributes ) ) {
         confess("Method new() does not accept \"$input\" attribute. Valid attributes are:\n", join(', ', @valid_new_attributes));
       }
     }
-
-
 
     # CHECK INPUT FILE
     # -----------------------------------
@@ -162,6 +177,15 @@ sub new {
     if (! $self->{keep_abi}) {
       $self->{chromas} = undef;
     }
+
+    #check valid attributes:
+    for my $input (sort keys %{ $self} ) {
+      if ( ! grep( /^$input$/, @valid_new_attributes, @valid_obj_attributes ) ) {
+        confess("Method new() does not accept \"$input\" attribute. Valid attributes are:\n", join(', ', @valid_new_attributes, @valid_obj_attributes));
+      }
+    }
+
+
     return $object;
 }
 
