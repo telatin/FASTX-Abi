@@ -132,7 +132,7 @@ sub new {
     };
 
     #check valid inputs:
-    for my $input (sort keys %{ $args }) {
+    for my $input (sort keys %{ $args } ) {
       if ( ! grep( /^$input$/, @valid_new_attributes ) ) {
         confess("Method new() does not accept \"$input\" attribute. Valid attributes are:\n", join(', ', @valid_new_attributes));
       }
