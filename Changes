@@ -1,13 +1,15 @@
 This is the changelog for FASTX::Abi. Version prior to v 0.1 are preliminary (alpha) release, not to be used in production.
 
 0.05	2019-05-20
+	* *NEW* validation object parameters with array of valid attributes (improves code self-documentation)
+	* Updated TravisCI configuration; Updated Dist::Zilla configuration linking GitHub and cleaning scripts (xt/private/)
 	* POD updates
 
 0.03	2019-05-15
-	* *NEW* _new()_ has attribute 'keep_abi' to preserve chromas object, otherwise deleted (_get_trace_info()_ changed accordingly)
-	* _new()_ now validates input attributes and die if unexpected value is passed
+	* *NEW* new() has attribute 'keep_abi' to preserve chromas object, otherwise deleted (_get_trace_info()_ changed accordingly)
+	* new() now validates input attributes and die if unexpected value is passed
 	* New unit tests
-	* *TODO* validate object attributes populated by _new()_ 
+	* *TODO* validate object attributes populated by _new()_
 
 0.02	2019-05-14
 	* *FIXED* release test (version) was pointing to wrong module
