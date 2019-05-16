@@ -1,5 +1,5 @@
 package FASTX::Abi;
-use 5.018;
+use 5.016;
 use warnings;
 use Carp qw(confess);
 use Bio::Trace::ABIF;
