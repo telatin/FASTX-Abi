@@ -5,7 +5,7 @@ use Carp qw(confess);
 use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
-$FASTX::Abi::VERSION = '0.03';
+$FASTX::Abi::VERSION = '0.04';
 #ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
 our @valid_new_attributes = ('filename', 'trim_ends', 'wnd', 'min_qual', 'bad_bases', 'keep_abi');
@@ -52,6 +52,9 @@ B<if> the I<.ab1> file is called using the I<hetero modality> the sequence store
 
 This module is designed to produce NGS-compatible FASTQ, so when ambiguous bases are detected the two "alleles" will be split into two sequences
 (of course, if more SNPs are present in the same trace, the output I<cannot> be phased).
+The image below shows a trace file (.ab1) with a valid variant and a low quality end.
+
+=for HTML <p><img src="https://raw.githubusercontent.com/telatin/FASTX-Abi/master/img/chromatogram.png" alt="Sanger trace AB1" /></p>
 
 =head1 METHODS
 
@@ -171,10 +174,12 @@ sub new {
     $object->{wnd}       = 10 unless defined $object->{wnd};
     $object->{min_qual}  = 20 unless defined $object->{min_qual};
     $object->{bad_bases} = 4  unless defined $object->{bad_bases};
+    $object->{keep_abi}  = 0  unless defined $object->{keep_abi};
+    
     # GET SEQUENCE FROM AB1 FILE
     # -----------------------------------
     my $seq = _get_sequence($self);
-    if (! $self->{keep_abi}) {
+    if ($self->{keep_abi} == 0) {
       $self->{chromas} = undef;
     }
 
