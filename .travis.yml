@@ -1,8 +1,10 @@
 language: perl
 perl:
+  - "5.16"
   - "5.18"
   - "5.22"
   - "5.26"
+  - "5.28"
 sudo: false
 install:
   - "source ./setup.sh"
