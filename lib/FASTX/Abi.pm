@@ -6,7 +6,7 @@ use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
 
-$FASTX::Abi::VERSION = '0.04';
+$FASTX::Abi::VERSION = '0.05';
 #ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
 our @valid_new_attributes = ('filename', 'trim_ends', 'wnd', 'min_qual', 'bad_bases', 'keep_abi');
@@ -26,7 +26,8 @@ our @valid_obj_attributes = (
   'quality',          # Quality, trimmed
   'raw_sequence',     # Raw sequence
   'raw_quality',      # Raw quality
-  'iso_seq'           # Sequence are equal
+  'iso_seq',          # Sequence are equal
+  'discard',          # Low quality sequence
 );
 =pod
 
@@ -176,7 +177,8 @@ sub new {
     $object->{min_qual}  = 20 unless defined $object->{min_qual};
     $object->{bad_bases} = 4  unless defined $object->{bad_bases};
     $object->{keep_abi}  = 0  unless defined $object->{keep_abi};
-    
+    $object->{discard}   = 0;
+
     # GET SEQUENCE FROM AB1 FILE
     # -----------------------------------
     my $seq = _get_sequence($self);
