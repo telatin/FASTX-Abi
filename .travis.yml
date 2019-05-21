@@ -5,6 +5,9 @@ perl:
   - "5.22"
   - "5.26"
   - "5.28"
+os:
+  - linux
+  - osx
 sudo: false
 install:
   - "source ./setup.sh"
