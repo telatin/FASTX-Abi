@@ -4,7 +4,7 @@ This is the changelog for FASTX::Abi. Version prior to v 0.1 are preliminary (al
 0.05	2019-05-17
 	* Extended existing unit tests; New unit test on trimming behaviour
 	* FIXED: Property 'discard' was previously not covered
-
+  
 0.04	2019-05-16
 	* Added unit tests on "keep_abi"
 	* Update README.md
