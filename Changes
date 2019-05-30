@@ -1,5 +1,8 @@
 This is the changelog for FASTX::Abi. Version prior to v 0.1 are preliminary (alpha) release, not to be used in production.
 
+0.06	2019-06-01
+	* Moved author tests to xt/release
+	* Minor POD and code comments updates
 
 0.05	2019-05-17
 	* Extended existing unit tests; New unit test on trimming behaviour
