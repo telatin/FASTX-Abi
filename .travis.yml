@@ -5,7 +5,10 @@ perl:
   - "5.22"
   - "5.26"
   - "5.28"
+os:
+  - linux
 sudo: false
 install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update && brew install cpanminus; fi
   - "source ./setup.sh"
 script: "dzil test --verbose"
