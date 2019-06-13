@@ -6,7 +6,7 @@ use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
 
-$FASTX::Abi::VERSION = '0.06';
+$FASTX::Abi::VERSION = '0.08';
 
 #ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
@@ -44,16 +44,14 @@ our @valid_obj_attributes = (
 =head1 SYNOPSIS
 
   use FASTX::Abi;
-  my $filepath = '/path/to/trace.ab1';
-
-  my $trace_fastq = FASTX::Abi->new({ filename => "$filepath" });
+  my $trace_fastq = FASTX::Abi->new({ filename => '/path/to/trace.ab1' });
 
   # Print chromatogram as FASTQ (will print two sequences if there are ambiguities)
   print $trace_fastq->get_fastq();
 
 =head1 BUILD STATUS
 
-=for html <a href="https://travis-ci.org/telatin/FASTX-Abi"><img src="https://travis-ci.org/telatin/FASTX-Abi.svg?branch=master"></a>
+=for html <p><a href="https://travis-ci.org/telatin/FASTX-Abi" title="Test report"><img alt="TravisCI tests badge" src="https://travis-ci.org/telatin/FASTX-Abi.svg?branch=master"></a></p>
 
 The source from GitHub is tested using Travis-CI for continuous integration. Please, check the CPAN grid test for a better estimate of 
 build success using CPAN version of interest. 
@@ -257,7 +255,7 @@ sub get_fastq {
   } else {
     $output .= '@' . $name . "_1\n" .
                 $self->{seq1} . "\n+\n" .
-                $self->{quality} . "\n";
+                $quality . "\n";
     $output .= '@' . $name . "_2\n" .
                 $self->{seq2} . "\n+\n" .
                 $quality . "\n";

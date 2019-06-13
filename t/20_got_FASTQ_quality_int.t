@@ -14,7 +14,7 @@ for my $chromatogram (glob "$chromatogram_dir/*.a*") {
   if (-e "$chromatogram") {
       my $data = FASTX::Abi->new({ filename => "$chromatogram" });
       my $seq_name = $data->{sequence_name};
-      my $fastq_string = $data->get_fastq('sequence_name', 'I');
+      my $fastq_string = $data->get_fastq('sequence_name', 39);
       my @lines = split /\n/, $fastq_string;
 
       my $expected_seqs = 1;
@@ -25,10 +25,10 @@ for my $chromatogram (glob "$chromatogram_dir/*.a*") {
       #check first sequence:
       if ($expected_seqs == 1) {
         ok( length($lines[1]) eq length($lines[3]), "[$seq_name] Sequence and quality length is matched (with newline)");
-        ok( $lines[3] =~/^[I]+$/, "[$seq_name] has user encoded quality");
+        ok( $lines[3] =~/^[H]+$/, "[$seq_name] has user encoded quality 39=" . substr($lines[3], 0,1) );
       } else {
         ok( length($lines[5]) eq length($lines[7]), "[$seq_name] Sequence and quality length is matched (with newline)");
-        ok( $lines[7] =~/^[I]+$/, "[$seq_name] has user encoded quality");
+        ok( $lines[7] =~/^[H]+$/, "[$seq_name] has user encoded quality 39=" . substr($lines[7], 0,1) );
       }
     }
 }
