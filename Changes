@@ -1,6 +1,8 @@
 This is the changelog for FASTX::Abi. Version prior to v 0.1 are preliminary (alpha) release, not to be used in production.
 
-0.06	2019-06-01
+0.06	2019-06-13
+	* get_fastq() now accepts a second parameter: fixed quality for each nucleotide
+	* get_fastq() now replaces spaces in the sequence name with a "_"
 	* Moved author tests to xt/release
 	* Minor POD and code comments updates
 

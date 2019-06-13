@@ -210,33 +210,57 @@ sub new {
     return $object;
 }
 
-=head2 B<get_fastq($sequence_name)>
+=head2 B<get_fastq($sequence_name, $fixed_quality)>
 
 Return a string with the FASTQ formatted sequence (if no ambiguities) or two
 sequences (if at least one ambiguity is found).
-If no I<$sequence_name> is provided, the header will be made from the AB1 filename.
+
+If no C<$sequence_name> is provided, the header will be made from the AB1 filename. If C<$sequence_name> is defined and contains spaces,
+they will converted to underscores.
+
+The C<$fixed_quality> is a user provided fixed quality value for each base printed. Can be an integer (10 < x < 40), or a single char.
+In the first case it will be encoded as quality score (values above 93 will all be rendered as C<~>), in the second case the character 
+will be used as quality score. If not supplied the original
+quality of the chromatogram will be used (that B<will be very low in SNPs positions>). 
+
+  # Use 40 as quality for each base of the trace:
+  $trace->get_fastq(undef, 40);
 
 =cut
 
 sub get_fastq {
-  my ($self, $name) = @_;
+  my ($self, $name, $quality_value) = @_;
 
   if (not defined $name) {
     $name = $self->{sequence_name};
+  } elsif ($name=~/\s+/) {
+    $name =~s/\s+/_/g;
+  }
+
+  my $quality = $self->{quality};
+  if (defined $quality_value) {
+    if ($quality_value =~/^\d+$/ and $quality_value >= 10) {
+      my $q = chr(($quality_value <= 93 ? $quality_value : 93) + 33);
+      $quality = $q x length($quality);
+    } elsif (length($quality_value) == 1) {
+      $quality = $quality_value x length($quality);
+    } else {
+      confess("Supplied quality is neither a valid integer or a single char: <$quality_value>\n");
+    }
   }
 
   my $output = '';
   if ( $self->{iso_seq} ) {
     $output .= '@' . $name . "\n" .
                 $self->{seq1} . "\n+\n" .
-                $self->{quality} . "\n";
+                $quality . "\n";
   } else {
     $output .= '@' . $name . "_1\n" .
                 $self->{seq1} . "\n+\n" .
                 $self->{quality} . "\n";
     $output .= '@' . $name . "_2\n" .
                 $self->{seq2} . "\n+\n" .
-                $self->{quality} . "\n";
+                $quality . "\n";
   }
   return $output;
 }
