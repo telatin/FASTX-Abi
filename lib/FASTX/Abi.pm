@@ -57,6 +57,22 @@ The source from GitHub is tested using Travis-CI for continuous integration.
 Check also the CPAN grid test for a better estimate of 
 build success using CPAN version of interest. 
 
+=head1 INSTALLATION
+
+Via B<cpanminus>:
+
+    # Install cpanminus if you don't have it:
+    curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+
+    # Install FASTX::Abi
+    cpanm FASTX::Abi
+
+
+Via Miniconda L<https://docs.conda.io/en/latest/miniconda.html>:
+
+    conda install -y -c bioconda perl-fastx-abi
+
+
 =head1 HETERO CALLING (IUPAC AMBIGUITIES)
 
 When Sanger-sequencing a mix of molecules (i.e. PCR product from heterozigous genome) containing a single-base polimorphisms,
