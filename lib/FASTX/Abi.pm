@@ -6,7 +6,7 @@ use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
 
-$FASTX::Abi::VERSION = '0.10';
+$FASTX::Abi::VERSION = '0.10.1';
 
 #ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
