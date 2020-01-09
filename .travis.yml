@@ -22,7 +22,7 @@ before_install:
   - "perlbrew exec --with $stableperl 'dzil authordeps | cpanm --quiet --notest'"
   - "perlbrew exec --with $stableperl 'dzil build --in $builddir'"
 install:
-  - '(cd $builddir && cpanm --quiet --notest --installdeps .)'
+  - '(cpanm --quiet --notest --installdeps .)'
   # extra deps for author tests:
   - cpanm --quiet --notest Test::Perl::Critic Test::Pod
 script:
