@@ -5,6 +5,7 @@ perl:
   - "5.22"
   - "5.26"
   - "5.28"
+  - "5.30"
 os:
   - linux
 sudo: false
