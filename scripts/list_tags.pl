@@ -1,30 +1,29 @@
 #!/usr/bin/env perl
-# ABSTRACT: Remove tags by content from ABI traces
-# PODNAME: strip_tags
+# ABSTRACT: List tags by content from ABI traces
+# PODNAME: list_tags
 
 use 5.018;
 use warnings;
 use Data::Dumper;
 use Bio::Trace::ABIF;
 use Term::ANSIColor;
-my ($file, $REMOVE_TAG) = @ARGV;
+my ($file) = @ARGV;
 
 # STRIP TAGS FROM AB1 FILE IF CONTENT MATCHES $REMOVE_TAG
 
-die "Missing argument <AB1File>\n(usage: FileABI TagContentToStrip)\n" if (not defined $file or not -e "$file");
-die "Missing argument TAG (usage: FileABI TagContentToStrip)\n" unless (defined $REMOVE_TAG);
-say "Processing $file";
+die "Missing argument <AB1File>\n" if (not defined $file or not -e "$file");
+say STDERR "#Processing $file";
 
 if ($file !~/bak$/) {
 	# OPENING REGULAR FILE: TO BE BACKUPPED
 	unless (-e "$file.bak") {
-		say "Backing up...";
+		say STDERR qq(Backing up "$file" to "$file.bak");
 		`cp "$file" "$file.bak"`;
 		die "Unable to backup\n" if ($?);
 	}
 } else {
 	# THIS IS A BACKUP
-	say "De-Backing up...";
+	say STDERR "De-Backing up...";
 	$file =~s/.bak$//;
 	`cp "$file.bak" "$file"`;
 	die "Unable to de-backup $file.bak\n" if ($?);
@@ -48,21 +47,5 @@ for my $t (@tag) {
 		say color('bold'),  "[$t] $num" , color('reset');
 		my %DirEntry = $trace->get_directory($t, $num);
 
-	#
-	# $VAR1 = {
-	#           'DATA_ITEM' => '
-	# Gingol-H09',
-	#           'ELEMENT_SIZE' => 1,
-	#           'TAG_NUMBER' => '1',
-	#           'TAG_NAME' => 'SMPL',
-	#           'ELEMENT_TYPE' => 'pString',
-	#           'NUM_ELEMENTS' => 11,
-	#           'DATA_SIZE' => 11
-	#         };
-
-	if ($DirEntry{'DATA_ITEM'} =~/$REMOVE_TAG/i) {
-		my $data = '';
-		$trace->write_tag($t, $num, \$data);
-		say Dumper \%DirEntry;
-	}
+		#say Dumper \$t;
 }

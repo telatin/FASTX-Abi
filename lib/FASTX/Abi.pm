@@ -6,7 +6,7 @@ use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
 
-$FASTX::Abi::VERSION = '0.08';
+$FASTX::Abi::VERSION = '0.10';
 
 #ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
@@ -53,7 +53,8 @@ our @valid_obj_attributes = (
 
 =for html <p><a href="https://travis-ci.org/telatin/FASTX-Abi" title="Test report"><img alt="TravisCI tests badge" src="https://travis-ci.org/telatin/FASTX-Abi.svg?branch=master"></a></p>
 
-The source from GitHub is tested using Travis-CI for continuous integration. Please, check the CPAN grid test for a better estimate of 
+The source from GitHub is tested using Travis-CI for continuous integration. 
+Check also the CPAN grid test for a better estimate of 
 build success using CPAN version of interest. 
 
 =head1 HETERO CALLING (IUPAC AMBIGUITIES)

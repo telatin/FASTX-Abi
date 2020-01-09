@@ -38,3 +38,4 @@ inc/
 .build
 FASTX-*
 LICENSE
+*.bak
