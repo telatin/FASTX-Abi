@@ -11,7 +11,7 @@ os:
 env:
   global:
     - builddir=./build-CI
-    - stableperl=5.20
+    - stableperl=5.22
     - RELEASE_TESTING=1
     - AUTOMATED_TESTING=1
     - EXTENDED_TESTING=1
@@ -26,5 +26,5 @@ install:
   # extra deps for author tests:
   - cpanm --quiet --notest Test::Perl::Critic Test::Pod
 script:
-  - '(cd $builddir && prove -lr t)'
+  - '(prove -lr t)'
 sudo: false
