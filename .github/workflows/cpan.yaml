@@ -30,7 +30,7 @@ jobs:
           perl-version: ${{ matrix.perl }}
       - run: perl -V
       - run: cpanm --verbose Perl::Critic  Dist::Zilla 
-      - run: dzil listdeps --missing --develop --author | cpanm
       - run: dzil authordeps --missing | cpanm
+      - run: dzil listdeps --missing --develop --author | cpanm
       - run: dzil test --verbose
       
