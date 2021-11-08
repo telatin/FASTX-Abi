@@ -1,0 +1,39 @@
+name: CI - Distzilla
+
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  perl-job:
+    runs-on: [self-hosted, "${{ matrix.architecture }}" ]
+    container:
+      image: perl:${{ matrix.perl-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        architecture:
+          - X64
+          - ARM
+        perl-version:
+          - '5.12'
+          - '5.22'
+          - 'latest'
+    name: Perl ${{ matrix.perl-version }}:${{ matrix.architecture }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get dependencies
+        run: |
+          cpanm --verbose Perl::PrereqScanner Perl::Critic Perl::Critic::Freenode Dist::Zilla $EXTRA_DEPS
+          dzil authordeps --missing | cpanm
+          dzil listdeps --missing --develop --author | cpanm
+      - name: Regular tests
+        run: |
+          dzil test
+      - name: X Tests
+        run: |
+          dzil test --release --verbose
