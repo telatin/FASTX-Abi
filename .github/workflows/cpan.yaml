@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: 'Dzil Test'
 
 # Controls when the action will run. 
 on:
@@ -29,6 +29,8 @@ jobs:
         with:
           perl-version: ${{ matrix.perl }}
       - run: perl -V
+      - run: cpanm --verbose Perl::PrereqScanner Perl::Critic Perl::Critic::Freenode Dist::Zilla 
       - run: cpanm --installdeps .
-      - run: prove -lv t
+      - run: dzil listdeps --missing --develop --author | cpanm
+      - run: dzil test --verbose
       
