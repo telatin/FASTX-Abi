@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-18.04', 'macOS-10.14', 'windows-2019']
+        os: ['ubuntu-18.04', 'macOS-latest', 'windows-2019']
         perl: [ 'latest', '5.28', '5.22', '5.12']
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     steps:
@@ -30,7 +30,6 @@ jobs:
           perl-version: ${{ matrix.perl }}
       - run: perl -V
       - run: cpanm --verbose Perl::PrereqScanner Perl::Critic Perl::Critic::Freenode Dist::Zilla 
-      - run: cpanm --installdeps .
       - run: dzil listdeps --missing --develop --author | cpanm
       - run: dzil test --verbose
       
