@@ -6,6 +6,7 @@ use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
 use FASTX::sw 'align';
+$FASTX::Abi::VERSION = '0.3.1';
 
 use constant DEFAULT_MATRIX => { 'wildcard_match'  => 0,
                                  'match'           => 1,
@@ -21,7 +22,7 @@ use constant EXTEND => 0;
 use constant GAP_SRC => 1;
 use constant GAP_TGT => 2;
 
-$FASTX::Abi::VERSION = '0.3.0';
+
 
 #ABSTRACT: Read Sanger trace file (chromatograms) in FASTQ format. For traces called with I<hetero> option, the ambiguities will be split into two sequences to allow usage from NGS tools that usually do not understand IUPAC ambiguities.
 
