@@ -6,7 +6,7 @@ use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
 use FASTX::sw 'align';
-$FASTX::Abi::VERSION = '0.3.1';
+$FASTX::Abi::VERSION = '0.4.0';
 
 use constant DEFAULT_MATRIX => { 'wildcard_match'  => 0,
                                  'match'           => 1,
