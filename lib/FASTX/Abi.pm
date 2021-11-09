@@ -210,7 +210,7 @@ sub new {
 
     my @ext = ('.abi','.ab1','.ABI','.abI','.AB1','.ab');
     my ($seqname) = basename($self->{filename}, @ext);
-    $object->{sequence_name} = $seqname;
+    $object->{sequence_name} = $abif->sample_name();
 
     # DEFAULTS
     # -----------------------------------

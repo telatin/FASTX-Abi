@@ -57,12 +57,19 @@ my $consensus = $F->merge($R);
 
 
 if (length($consensus) > length($F->{seq1}) and  length($consensus) > length($R->{seq1}) ) {
+
     my $score = (
-         $F->{merge}->{score} / ( length($consensus) - length($R->{seq1})  )
+         sprintf("%.4f", $F->{merge}->{score} / ( length($consensus) - length($R->{seq1})  ) )
          );
+
+    if ( $F->{sequence_name} ne $R->{sequence_name} ) {
+        say STDERR "[WARNING] Sample name differs in the two chromatograms: ", 
+        $F->{sequence_name}, " and ", $R->{sequence_name}, " respectively.";
+    }
     if ($score < $min_score) {
         die "Merge score too low: $score\n";
     }
+
     my $name =  defined $seqname  ? $seqname : $F->{sequence_name};
     my $comm = $info ? 'for=' . length($F->{seq1}) . ';rev=' . length($R->{seq1}) . ';cons=' . length($consensus) .
      ';score=' . $F->{merge}->{score} : '';
@@ -110,6 +117,10 @@ Forward read in .ab1 format
 
 Reverse read in .ab1 format
 
+=item C<-n>, C<--name> <name>
+
+Output sequence name (otherwise sample name from forward chromatogram)
+
 =item  C<-q>, C<--min-qual> <min_qual>
 
 Minimum quality score to keep a base  
@@ -131,3 +142,4 @@ Minimum alignment score to keep a base
 Add information about the merge to the header
 
 =back
+
