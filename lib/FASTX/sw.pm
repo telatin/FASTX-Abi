@@ -392,7 +392,7 @@ __END__
  
 =back
  
-=head1 AUTHOR
+=head1 SCRIPT FROM
  
 Lincoln Stein E<lt>lstein@cshl.orgE<gt>.
  
