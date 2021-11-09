@@ -364,10 +364,10 @@ sub merge {
       $consensus .= $base2;
     } elsif ($base1 ne '-' and $base2 eq '-') {
       $consensus .= $base1;
-    } else {
+    } elsif ($base1 ne '-' and $base2 ne '-') {
       my $qual1 = substr($self->{quality}, $pos1, 1);
       my $qual2 = substr($other->{quality}, $pos2, 1);
-      $consensus .= _ascii_qual($qual1) > _ascii_qual($qual2) ? lc($base1) : lc($base2);
+      $consensus .= _ascii_qual($qual1) >= _ascii_qual($qual2) ? lc($base1) : lc($base2);
     }
   }
   # evaluate longest stretch of "|" in $m

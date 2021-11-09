@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# PODNAME: Merge forward and reverse ABI files into a single sequence
+# PODNAME: mergeabi - Merge forward and reverse ABI files into a single sequence
 use 5.012;
 use warnings;
 use FindBin qw($RealBin);
@@ -16,18 +16,25 @@ my $min_qual = 44;
 my $bad_bases = 3;
 my $wnd = 4;
 my $min_score = 0.8;
+my $help = 0;
+my $info = 0;
+my $seqname = undef;
 GetOptions(
     '1|f|for=s'    => \$for,
     '2|r|rev=s'    => \$rev,
+    'n|name=s'     => \$seqname,
     'q|min-qual=f' => \$min_qual,
     'b|bad-bases=i'=> \$bad_bases,
     'w|wnd=i'      => \$wnd,
     's|min-score=f'=> \$min_score,
+    'h|help'       => \$help,
+    'i|info'       => \$info,
 );
 
+usage() if $help;
 if (not $for or not $rev) {
     die "Usage: $PROG [opts] --for <forward.fastq> --rev <reverse.fastq>\n";
-}
+} 
 
 
 my $F = FASTX::Abi->new({
@@ -56,8 +63,71 @@ if (length($consensus) > length($F->{seq1}) and  length($consensus) > length($R-
     if ($score < $min_score) {
         die "Merge score too low: $score\n";
     }
-    my $comm = 'for=' . length($F->{seq1}) . ';rev=' . length($R->{seq1}) . ';cons=' . length($consensus) .
-     ';score=' . $F->{merge}->{score};
-    print '>', $F->{sequence_name}, " ", $comm,"\n", $consensus, "\n";
+    my $name =  defined $seqname  ? $seqname : $F->{sequence_name};
+    my $comm = $info ? 'for=' . length($F->{seq1}) . ';rev=' . length($R->{seq1}) . ';cons=' . length($consensus) .
+     ';score=' . $F->{merge}->{score} : '';
+    print '>', $name, " ", $comm,"\n", $consensus, "\n";
 
 }
+
+sub usage {
+    say STDERR<<EOF;
+  Merge forward and reverse ABI files into a single sequence
+
+  Usage: merge [options] --for <forward.fastq> --rev <reverse.fastq>
+
+    Options:
+        -1, --for <forward.fastq>       Forward read in .ab1 format
+        -2, --rev <reverse.fastq>       Reverse read in .ab1 format
+        -n, --name <name>               Name of sequence (otherwise taken from forward filename)
+        -q, --min-qual <min_qual>       Minimum quality score to keep a base [default: $min_qual]
+        -b, --bad-bases <bad_bases>     Maximum number of bad bases to keep a base [default: $bad_bases]
+        -w, --wnd <wnd>                 Window size to use for quality score calculation [default: $wnd]
+        -s, --min-score <min_score>     Minimum alignment score to keep a base [default: $min_score]
+EOF
+    exit();
+}
+
+__END__
+
+=head1 mergeabi
+
+Merge forward and reverse ABI files into a single sequence
+
+=head2 Usage
+
+  mergeabi [options] --for <forward.fastq> --rev <reverse.fastq>
+
+=head2 Parameters
+
+=over 4
+
+=item C<-1>, C<--for> <forward.fastq>
+
+Forward read in .ab1 format
+
+=item  C<-r>, C<--rev> <reverse.fastq>
+
+Reverse read in .ab1 format
+
+=item  C<-q>, C<--min-qual> <min_qual>
+
+Minimum quality score to keep a base  
+
+=item  C<-b>, C<--bad-bases> <bad_bases>
+
+Maximum number of bad bases to keep a base 
+
+=item  C<-w>, C<--wnd> <wnd>
+
+Window size to use for quality score calculation 
+
+=item  C<-s>, C<--min-score> <min_score>
+
+Minimum alignment score to keep a base 
+
+=item  C<-i>, C<--info>
+
+Add information about the merge to the header
+
+=back

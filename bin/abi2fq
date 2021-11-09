@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# PODNAME: - ab2fq.pl - A script to convert traces to FASTQ
+# PODNAME: ab2fq.pl - A script to convert traces to FASTQ
 
 use 5.012;
 use warnings;
