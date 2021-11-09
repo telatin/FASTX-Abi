@@ -1,0 +1,63 @@
+#!/usr/bin/env perl
+# PODNAME: Merge forward and reverse ABI files into a single sequence
+use 5.012;
+use warnings;
+use FindBin qw($RealBin);
+use lib "$RealBin/../lib";
+use FASTX::Abi;
+use File::Basename;
+use Data::Dumper;
+use Getopt::Long;
+
+my $PROG = basename($0);
+my $for;
+my $rev;
+my $min_qual = 44;
+my $bad_bases = 3;
+my $wnd = 4;
+my $min_score = 0.8;
+GetOptions(
+    '1|f|for=s'    => \$for,
+    '2|r|rev=s'    => \$rev,
+    'q|min-qual=f' => \$min_qual,
+    'b|bad-bases=i'=> \$bad_bases,
+    'w|wnd=i'      => \$wnd,
+    's|min-score=f'=> \$min_score,
+);
+
+if (not $for or not $rev) {
+    die "Usage: $PROG [opts] --for <forward.fastq> --rev <reverse.fastq>\n";
+}
+
+
+my $F = FASTX::Abi->new({
+    filename => $for,
+    trim_ends => 1,
+    min_qual  => $min_qual,
+    bad_bases => $bad_bases,
+    wnd       => $wnd,
+});
+
+my $R = FASTX::Abi->new({
+    filename => $rev,
+    trim_ends => 1,
+    min_qual  => $min_qual,
+    bad_bases => $bad_bases,
+    wnd       => $wnd,
+});
+
+my $consensus = $F->merge($R);
+
+
+if (length($consensus) > length($F->{seq1}) and  length($consensus) > length($R->{seq1}) ) {
+    my $score = (
+         $F->{merge}->{score} / ( length($consensus) - length($R->{seq1})  )
+         );
+    if ($score < $min_score) {
+        die "Merge score too low: $score\n";
+    }
+    my $comm = 'for=' . length($F->{seq1}) . ';rev=' . length($R->{seq1}) . ';cons=' . length($consensus) .
+     ';score=' . $F->{merge}->{score};
+    print '>', $F->{sequence_name}, " ", $comm,"\n", $consensus, "\n";
+
+}
