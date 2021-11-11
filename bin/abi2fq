@@ -76,7 +76,9 @@ HELP
 
 __END__
 
-=head1 abi2fq
+=head2 Description
+
+Convert one or multiple traces to FASTQ.
 
 =head2 Usage
 

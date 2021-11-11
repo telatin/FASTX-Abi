@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# PODNAME: strip_tags - Remove tags by content from ABI traces
+# PODNAME: stripabitags - Remove tags by content from ABI traces
 
 use 5.018;
 use warnings;
@@ -90,7 +90,7 @@ for my $t (@tag) {
 
 __END__
 
-=head1 stripabitags
+=head2 Description
 
 List ABI tags and remove a tag based on its content.
 

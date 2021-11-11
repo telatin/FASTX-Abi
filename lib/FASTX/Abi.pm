@@ -6,7 +6,7 @@ use Bio::Trace::ABIF;
 use Data::Dumper;
 use File::Basename;
 use FASTX::sw 'align';
-$FASTX::Abi::VERSION = '1.0.0';
+$FASTX::Abi::VERSION = '1.0.1';
 
 use constant DEFAULT_MATRIX => { 'wildcard_match'  => 0,
                                  'match'           => 1,
@@ -368,7 +368,7 @@ sub merge {
     } elsif ($base1 ne '-' and $base2 ne '-') {
       my $qual1 = substr($self->{quality}, $pos1, 1);
       my $qual2 = substr($other->{quality}, $pos2, 1);
-      $consensus .= _ascii_qual($qual1) >= _ascii_qual($qual2) ? lc($base1) : lc($base2);
+      $consensus .= _ascii_qual($qual1) > _ascii_qual($qual2) ? lc($base1) : lc($base2);
     }
   }
   # evaluate longest stretch of "|" in $m
